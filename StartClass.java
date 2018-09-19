@@ -2,9 +2,11 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 //import java.util.concurrent.Executors;
 //import java.util.concurrent.ScheduledExecutorService;
 
@@ -14,9 +16,10 @@ public class StartClass {
 	private static int countMessages = 0;
 	private static final Random r = new Random();
 	private final static List<MessageType> allMessages = new ArrayList<>();
-	private final static List<ManageSale> allSales = new ArrayList<>();
+	private final static Set<ManageSale> allSales = new HashSet<>();
 	private final static Map<String, Double> valReport = new HashMap<>();
 	private final static Map<String, Integer> occurrencesReport = new HashMap<>();
+	private static long manageSaleId = 0;
 
 	private static String getRandomProductType() {
 		final int productType = Math.abs(r.nextInt(8) + 1);
@@ -87,6 +90,7 @@ public class StartClass {
 
 	private static void processMessage(final MessageType message){
 		if(message != null) {
+			++manageSaleId;
 			if(message instanceof MessageType_1) {
 
 				MessageType_1 message_1 = (MessageType_1)message;
@@ -95,8 +99,11 @@ public class StartClass {
 					Sale sale = message_1.getSale();
 					if(sale != null) {
 						ManageSale ms = new ManageSale();
+						ms.setId(manageSaleId);
 						ms.setSale(sale);
 						ms.setOccurrencesNumber(1);
+						ms.setAdOp(null);
+
 						allSales.add(ms);
 					}
 				}
@@ -108,8 +115,10 @@ public class StartClass {
 					Sale sale = message_2.getSale();
 					if(sale != null) {
 						ManageSale ms = new ManageSale();
+						ms.setId(manageSaleId);
 						ms.setSale(sale);
 						ms.setOccurrencesNumber(message_2.getOccurrencesNumber());
+						ms.setAdOp(null);
 						allSales.add(ms);
 					}
 				}
@@ -120,9 +129,9 @@ public class StartClass {
 					Sale sale = message_3.getSale();
 					if(sale != null) {
 						ManageSale ms = new ManageSale();
+						ms.setId(manageSaleId);
 						ms.setSale(sale);
 						ms.setAdOp(message_3.getAdOp());
-						ms.setOccurrencesNumber(1);
 						allSales.add(ms);
 					}
 				}
@@ -131,6 +140,11 @@ public class StartClass {
 	}
 
 	private static void createSimpleReport() {
+
+		allSales.clear();
+		valReport.clear();
+		occurrencesReport.clear();
+
 		if(allMessages != null && !allMessages.isEmpty()) {
 			allMessages.forEach(message -> processMessage(message));
 		}
