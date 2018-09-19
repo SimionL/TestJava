@@ -3,7 +3,6 @@ public class ManageSale {
 	Sale sale;
 	int occurrencesNumber;
 	AdjustmentOperation adOp;
-
 	private Long id;
 
 	public Sale getSale() {

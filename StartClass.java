@@ -23,7 +23,6 @@ public class StartClass {
 
 	private static String getRandomProductType() {
 		final int productType = Math.abs(r.nextInt(8) + 1);
-
 		switch(productType) {
 		case 1:{
 			return "apple";
